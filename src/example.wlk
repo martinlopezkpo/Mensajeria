@@ -111,8 +111,9 @@ object paquete{
 }
 
 object empresaMensajeria {
-	var mensajeros = []
-	var entregados = []
+	const property mensajeros = []
+	const property entregados = []
+	var property pendientes = [paquete,paquetin,paqueton]
 	//2.1)contratar a uno(el parametro es un elemento nuevo para la lista)
 	method contratar(empleado){
 		mensajeros.add(empleado)
@@ -153,17 +154,17 @@ object empresaMensajeria {
 	
 	
 	//3.1)al menos 1 puede entregarlo?
-	method algunoPuedeEntregar() {
-		return mensajeros.any({mensajero => paquete.puedeSerEntregadoPor(mensajero)})
+	method algunoPuedeEntregar(paquete) {
+		return mensajeros.any({mensajero=>paquete.puedeSerEntregadoPor(mensajero)})
 	}
 	//3.2)es un paquete facil?(todos pueden entregarlo)
-	method paqueteFacil() {
-		return mensajeros.all({mens=>paquete.puedeSerEntregadoPor(mens)})
+	method paqueteFacil(paquete) {
+		return mensajeros.all({mensajero=>paquete.puedeSerEntregadoPor(mensajero)})
 	}
 	//3.3)Saber que mensajeros de la empresa, son los candidatos que pueden
 	//	  llevar un paquete
-	method candidatosPara() {
-		return mensajeros.filter({mensajero => paquete.puedeSerEntregadoPor(mensajero)})
+	method candidatosPara(paquete) {
+		return mensajeros.filter({mensajero=>paquete.puedeSerEntregadoPor(mensajero)})
 	}
 	//3.4)Saber si una mensajería tiene sobrepeso.
 	//	  Esto sucede si el promedio del peso de los mensajeros
@@ -182,13 +183,50 @@ object empresaMensajeria {
 	//	  pueden enviarlo, y registra que fue enviado.
 	//	  En el caso de no haber nadie para enviarlo, debe
 	//	  informarse con un error descriptivo.
-	method enviarPaquete(){
-		if (not self.algunoPuedeEntregar())  
+	method enviar(paquete){
+		if (not self.algunoPuedeEntregar(paquete))
 			error.throwWithMessage("No hay mensajeros disponibles")
 		entregados.add(paquete)
+		pendientes.remove(paquete)
+	}
+	//fragmentos para la parte 4
+	method enviarTodos() {
+		self.paquetesAEnviar().forEach{paquete => self.enviar(paquete)}
+	}
+	method paquetesAEnviar(){
+		return pendientes.filter{paquete => self.algunoPuedeEntregar(paquete)}
+	}
+	method paqueteMasCaro(){
+		return pendientes.max{paquete => paquete.precio()}
 	}
 }
+object paquetin {
+	method puedeSerEntregadoPor(mensajero) {return true}
+	method precio() {return 0}
+}
 
+object paqueton {
+	var destinos = [brooklyn, matrix]
+	var precioUnitario = 100
+	var importePagado = 0
+	
+	method pagar(){
+		importePagado += 100 
+	}
+	
+	method estaPago() {
+		return importePagado >= self.precio()
+	}
+	method precio(){	
+		return destinos.size()*precioUnitario
+	}
+	method puedeSerEntregadoPor(mensajero) {
+	    return self.puedePasarPorDestinos(mensajero) && self.estaPago() 
+	}
+	method puedePasarPorDestinos(mensajero) {
+		return destinos.all{d=>d.dejarPasar(mensajero)}
+	}
+}
 
 
 
