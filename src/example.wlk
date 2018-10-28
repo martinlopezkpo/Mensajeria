@@ -98,7 +98,7 @@ object neo {
 object paquete{
 	var estaPago = false
 	var destino = pBrooklyn
-	const precioBase = 50
+	const precioBase = 50	//parte4
 	
 	method pagarPaquete() 		{estaPago = true}
 	method estaPago() 			{return estaPago}
@@ -108,6 +108,7 @@ object paquete{
 	method puedeSerEntregadoPor(mensajero) {
 		return destino.dejaPasar(mensajero) and self.estaPago()
 	}
+	method precio() = precioBase
 }
 
 object empresaMensajeria {
@@ -188,18 +189,17 @@ object empresaMensajeria {
 		entregados.add(paquete)
 		pendientes.remove(paquete)
 	}
-	/*fragmentos para la parte 4
-	A su vez, hay nuevos requerimientos para la mensajeria:
+	/*A su vez, hay nuevos requerimientos para la mensajeria:
 	Hacer que se envien todos los paquetes recibidos que se puedan enviar,
-	registrándolo adecuadamente.
-	Encontrar el paquete más caro.
-	(el paquete original tiene un precio determinado en $50)*/
+	registrándolos adecuadamente.*/
 	method enviarTodos() {
 		self.paquetesAEnviar().forEach{paquete => self.enviar(paquete)}
 	}
 	method paquetesAEnviar(){
 		return pendientes.filter{paquete => self.algunoPuedeEntregar(paquete)}
 	}
+	/*Encontrar el paquete más caro.
+	(el paquete original tiene un precio determinado en $50)*/
 	method paqueteMasCaro(){
 		return pendientes.max{paquete => paquete.precio()}
 	}
@@ -224,12 +224,14 @@ object paqueton {
 	method agregarDestino(dest)	 {destinos.add(dest)}
 	method agregarDestinos(dests){destinos.addAll(dests)}
 	
-	method precioTotalPaqueton(){return destinos.size()*precioBase}
+	method pagoParcial()		 {importePagado += 100}
 	
-	method pagoParcial()		{importePagado += 100}
+	method precioTotalPaqueton() {return destinos.size()*precioBase}
 	
-	method estaPago()			{return importePagado >= self.precioTotalPaqueton()}
+	method estaPago()			 {return importePagado >= self.precioTotalPaqueton()}
 
+	//el paqueton puede ser entregado, si pasa por todos los destinos de la lista, y si esta
+	//totalmente pagado.
 	method puedeSerEntregadoPor(mensajero)
 	{return self.puedePasarPorDestinos(mensajero) && self.estaPago()}
 	
