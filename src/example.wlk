@@ -103,7 +103,7 @@ object paquete{
 	method pagarPaquete() 		{estaPago = true}
 	method estaPago() 			{return estaPago}
 	method enviarDestino(lugar) {destino = lugar}
-	
+
 	//fragmento necesario para la parte 3(al menos 1 puede entregarlo?)
 	method puedeSerEntregadoPor(mensajero) {
 		return destino.dejaPasar(mensajero) and self.estaPago()
@@ -112,9 +112,9 @@ object paquete{
 }
 
 object empresaMensajeria {
-	const property mensajeros = []
-	const property entregados = []
-	var property pendientes = [paquete,paquetin,paqueton]
+	var mensajeros = []
+	var entregados = []
+	var pendientes = [paquete,paquetin,paqueton]
 	//2.1)contratar a uno(el parametro es un elemento nuevo para la lista)
 	method contratar(empleado){
 		mensajeros.add(empleado)

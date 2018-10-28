@@ -52,8 +52,6 @@ describe "conjunto de tests de los mensajeros"
 		neo.recarga(100)
 		assert.that(laMatrix.dejaPasar(neo))
 	}
-	
-	//Que neo con crédito no puede llevar el paquete si no está pago a la matrix.
 	/*fixture{
 		paquete.pagar()
     }
