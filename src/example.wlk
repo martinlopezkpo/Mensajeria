@@ -142,7 +142,7 @@ object empresaMensajeria {
 	method pesoDelUltimo(){
 		return mensajeros.last().peso()
 	}
-	
+
 	//solo para testear
 	method mensajeros(){
 		return mensajeros
@@ -151,8 +151,7 @@ object empresaMensajeria {
 	method entregados() {
 		return entregados
 	}
-	
-	
+
 	//3.1)al menos 1 puede entregarlo?
 	method algunoPuedeEntregar(paquete) {
 		return mensajeros.any({mensajero=>paquete.puedeSerEntregadoPor(mensajero)})
@@ -189,7 +188,12 @@ object empresaMensajeria {
 		entregados.add(paquete)
 		pendientes.remove(paquete)
 	}
-	//fragmentos para la parte 4
+	/*fragmentos para la parte 4
+	A su vez, hay nuevos requerimientos para la mensajeria:
+	Hacer que se envien todos los paquetes recibidos que se puedan enviar,
+	registrándolo adecuadamente.
+	Encontrar el paquete más caro.
+	(el paquete original tiene un precio determinado en $50)*/
 	method enviarTodos() {
 		self.paquetesAEnviar().forEach{paquete => self.enviar(paquete)}
 	}
@@ -200,36 +204,32 @@ object empresaMensajeria {
 		return pendientes.max{paquete => paquete.precio()}
 	}
 }
-//Paquetito: es gratis, o sea, no hace falta veriricar si este pago.
-//Ademas, cualquier mensajero lo puede llevar.
+//Paquetito
 object paquetin {
+	//Cualquier mensajero lo puede llevar.
 	method puedeSerEntregadoPor(mensajero)	{return true}
+	//Es gratis, o sea, no hace falta veriricar si este pago.
 	method precio() 						{return 0}
 }
-//Paqueton: debe poder pasar por muchos destinos.
-//Su precio base es 100$ por cada destino.
-//Se puede ir pagando parcialmente y se debe pagar totalmente
-//para poder ser enviado.
-
-/*A su vez, hay nuevos requerimientos para la mensajeria:
-Hacer que se envien todos los paquetes recibidos que se puedan enviar,
-registrándolo adecuadamente.
-Encontrar el paquete más caro.
-(el paquete original tiene un precio determinado en $50)*/
-
+//Paqueton:
 object paqueton {
-	var destinos = [pBrooklyn, laMatrix]
+	//Debe poder pasar por muchos destinos(una lista de ellos).
+	var destinos = []
+	//Su precio es 100$ por cada destino.
 	var precioBase = 100
 	var importePagado = 0
+	//Se puede ir pagando parcialmente y se debe pagar totalmente para poder ser enviado.
+	method quitarDestino(dest)	 {destinos.remove(dest)}
+	method borrarDestinos()		 {destinos.clear()}
+	method agregarDestino(dest)	 {destinos.add(dest)}
+	method agregarDestinos(dests){destinos.addAll(dests)}
 	
-	method restarDestinos()		{destinos = []}
-	method agregarDestino(dest)		{destinos.add(dest)}
+	method precioTotalPaqueton(){return destinos.size()*precioBase}
 	
 	method pagoParcial()		{importePagado += 100}
 	
-	method estaPago()	{return importePagado >= self.precio()}
-	method precio()		{return destinos.size()*precioBase}
-	
+	method estaPago()			{return importePagado >= self.precioTotalPaqueton()}
+
 	method puedeSerEntregadoPor(mensajero)
 	{return self.puedePasarPorDestinos(mensajero) && self.estaPago()}
 	
