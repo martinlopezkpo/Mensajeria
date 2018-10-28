@@ -200,32 +200,41 @@ object empresaMensajeria {
 		return pendientes.max{paquete => paquete.precio()}
 	}
 }
+//Paquetito: es gratis, o sea, no hace falta veriricar si este pago.
+//Ademas, cualquier mensajero lo puede llevar.
 object paquetin {
-	method puedeSerEntregadoPor(mensajero) {return true}
-	method precio() {return 0}
+	method puedeSerEntregadoPor(mensajero)	{return true}
+	method precio() 						{return 0}
 }
+//Paqueton: debe poder pasar por muchos destinos.
+//Su precio base es 100$ por cada destino.
+//Se puede ir pagando parcialmente y se debe pagar totalmente
+//para poder ser enviado.
+
+/*A su vez, hay nuevos requerimientos para la mensajeria:
+Hacer que se envien todos los paquetes recibidos que se puedan enviar,
+registrándolo adecuadamente.
+Encontrar el paquete más caro.
+(el paquete original tiene un precio determinado en $50)*/
 
 object paqueton {
-	var destinos = [brooklyn, matrix]
-	var precioUnitario = 100
+	var destinos = [pBrooklyn, laMatrix]
+	var precioBase = 100
 	var importePagado = 0
 	
-	method pagar(){
-		importePagado += 100 
-	}
+	method restarDestinos()		{destinos = []}
+	method agregarDestino(dest)		{destinos.add(dest)}
 	
-	method estaPago() {
-		return importePagado >= self.precio()
-	}
-	method precio(){	
-		return destinos.size()*precioUnitario
-	}
-	method puedeSerEntregadoPor(mensajero) {
-	    return self.puedePasarPorDestinos(mensajero) && self.estaPago() 
-	}
-	method puedePasarPorDestinos(mensajero) {
-		return destinos.all{d=>d.dejarPasar(mensajero)}
-	}
+	method pagoParcial()		{importePagado += 100}
+	
+	method estaPago()	{return importePagado >= self.precio()}
+	method precio()		{return destinos.size()*precioBase}
+	
+	method puedeSerEntregadoPor(mensajero)
+	{return self.puedePasarPorDestinos(mensajero) && self.estaPago()}
+	
+	method puedePasarPorDestinos(mensajero)
+	{return destinos.all{ destino => destino.dejarPasar(mensajero) }}
 }
 
 
