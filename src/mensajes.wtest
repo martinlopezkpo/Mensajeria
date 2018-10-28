@@ -1,6 +1,105 @@
+//Tests
 
-test "testX" {
+import example.*
 
-	assert.that(true)
+describe "conjunto de tests de los mensajeros"
+{	//parte 1
+
+	test "roberto(90kg) con CAMION y 3 acoplado NO PASA por el puente"{
+		roberto.viaje(camion)
+		camion.nuevoacoplado(3)
+		assert.notThat(pBrooklyn.dejaPasar(roberto))
+		//dejaPasar retorna falso, pero lo niego con notThat para q sea true
+		//de lo contrario falla el test. luego, se afirma q NO PASA...
+	}
+	test "roberto(90kg) con CAMION y 2 acoplado NO PASA por el puente"{
+		roberto.viaje(camion)
+		camion.nuevoacoplado(2)
+		assert.notThat(pBrooklyn.dejaPasar(roberto))
+		//idem aqui.
+	}
+	test "roberto(90kg) con CAMION y 1 acoplado PASA por el puente"{
+		roberto.viaje(camion)
+		camion.nuevoacoplado(1)
+		assert.that(pBrooklyn.dejaPasar(roberto))
+		//pasa sin problema.
+	}
+	test "roberto(90kg) con su BICICLETA PASA por el puente, SIEMPRE"{
+		roberto.viaje(bici)
+		assert.that(pBrooklyn.dejaPasar(roberto))
+		//pasa sin problema.
+	}
+	test "roberto(90kg) NO ENTRA a la matrix, NUNCA"{
+		assert.notThat(laMatrix.dejaPasar(roberto))
+		//pasa sin problema.
+	}
+	test "chuck norrys(900kg) PASA por el puente, SIEMPRE"{
+		assert.that(pBrooklyn.dejaPasar(chucknorris))
+	}
+	test "chuck norrys(900kg) ENTRA a la matrix, SIEMPRE"{
+		assert.that(laMatrix.dejaPasar(chucknorris))
+	}
+	test "la humanidad cree en dios, y dios cree en chuck norris"{
+		assert.that(true)
+	}
+	test "neo PASA por el puente"{
+		assert.that(pBrooklyn.dejaPasar(neo))
+	}
+	test "neo NO TIENE CREDITO, no puede entrar a la matrix($0 por defecto)"{
+		assert.notThat(laMatrix.dejaPasar(neo))
+	}
+	test "neo TIENE CREDITO, puede entrar a la matrix"{
+		neo.recarga(100)
+		assert.that(laMatrix.dejaPasar(neo))
+	}
+	
+	//Que neo con crédito no puede llevar el paquete si no está pago a la matrix.
+	/*fixture{
+		paquete.pagar()
+    }
+    
+    method agregarMuchosMensajeros(){
+    	mensajeria.contratar(neo)
+    	mensajeria.contratar(chuck)
+    	mensajeria.contratar(roberto)
+	}
+	
+	test "La mensajeria tiene a neo como empleado si lo agregarmos" {
+		self.agregarMuchosMensajeros()
+		assert.that(mensajeria.mensajeros().contains(neo))
+	}
+	
+	test "Si neo es empleado, Hay un mensajero que puede enviar el paquete" {
+		mensajeria.contratar(neo)
+		assert.that(mensajeria.algunoPuedeEntregar())
+	}
+	
+	test "El paquete fue enviado" {
+		self.agregarMuchosMensajeros()
+		mensajeria.enviar()
+		assert.that(mensajeria.entregados().contains(paquete))
+	}
+	test "Si no hay mensajeros, el paquete no se envia" {
+		
+		assert.throwsException({mensajeria.enviar()})
+		assert.notThat(mensajeria.entregados().contains(paquete))
+	}*/
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
