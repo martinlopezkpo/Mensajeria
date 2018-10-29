@@ -115,6 +115,11 @@ object empresaMensajeria {
 	var mensajeros = []
 	var entregados = []
 	var pendientes = [paquete,paquetin,paqueton]
+	
+	method cantMensajeros() =	mensajeros.size()
+	method cantPaqEntr() =		entregados.size()
+	method cantPaqPend() =		pendientes.size()
+	
 	//2.1)contratar a uno(el parametro es un elemento nuevo para la lista)
 	method contratar(empleado){
 		mensajeros.add(empleado)

@@ -1,10 +1,7 @@
-//Tests
-
 import example.*
 
-describe "conjunto de tests de los mensajeros"
+describe "tests de la empresa de mensajeria y los mensajeros"
 {	//parte 1
-
 	test "roberto(90kg) con CAMION y 3 acoplado NO PASA por el puente"{
 		roberto.viaje(camion)
 		camion.nuevoacoplado(3)
@@ -52,36 +49,24 @@ describe "conjunto de tests de los mensajeros"
 		neo.recarga(100)
 		assert.that(laMatrix.dejaPasar(neo))
 	}
-	/*fixture{
-		paquete.pagar()
-    }
-    
-    method agregarMuchosMensajeros(){
-    	mensajeria.contratar(neo)
-    	mensajeria.contratar(chuck)
-    	mensajeria.contratar(roberto)
+	test "neo TIENE CREDITO pero no puede llevar el paquete a la matrix por que no esta pago"{
+		neo.recarga(100)
+		paquete.enviarDestino(laMatrix)
+		assert.notThat(paquete.puedeSerEntregadoPor(neo))
+	}
+	test "neo TIENE CREDITO y puede llevar el paquete a la matrix por que esta pago"{
+		neo.recarga(100)
+		paquete.enviarDestino(laMatrix)
+		paquete.pagarPaquete()
+		assert.that(paquete.puedeSerEntregadoPor(neo))
+	}
+	//parte 2
+	test "la empresa no tiene a nadie contratado, ni paquetes entregados pero si pendientes"{
+		assert.equals(0, empresaMensajeria.cantMensajeros())
+		assert.equals(1, empresaMensajeria.cantPaqEntr())
+		//assert.equals(3, empresaMensajeria.cantPaqPend())
 	}
 	
-	test "La mensajeria tiene a neo como empleado si lo agregarmos" {
-		self.agregarMuchosMensajeros()
-		assert.that(mensajeria.mensajeros().contains(neo))
-	}
-	
-	test "Si neo es empleado, Hay un mensajero que puede enviar el paquete" {
-		mensajeria.contratar(neo)
-		assert.that(mensajeria.algunoPuedeEntregar())
-	}
-	
-	test "El paquete fue enviado" {
-		self.agregarMuchosMensajeros()
-		mensajeria.enviar()
-		assert.that(mensajeria.entregados().contains(paquete))
-	}
-	test "Si no hay mensajeros, el paquete no se envia" {
-		
-		assert.throwsException({mensajeria.enviar()})
-		assert.notThat(mensajeria.entregados().contains(paquete))
-	}*/
 	
 	
 	
@@ -95,9 +80,4 @@ describe "conjunto de tests de los mensajeros"
 	
 	
 	
-	
-	
-	
-	
-
 }
