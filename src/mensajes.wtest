@@ -63,21 +63,128 @@ describe "tests de la empresa de mensajeria y los mensajeros"
 	//parte 2
 	test "la empresa no tiene a nadie contratado, ni paquetes entregados pero si pendientes"{
 		assert.equals(0, empresaMensajeria.cantMensajeros())
-		assert.equals(1, empresaMensajeria.cantPaqEntr())
-		//assert.equals(3, empresaMensajeria.cantPaqPend())
+		assert.equals(0, empresaMensajeria.cantPaqEntr())
+		assert.equals(3, empresaMensajeria.cantPaqPend())
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	test "la empresa ah contratado a 3"{
+		empresaMensajeria.contratar(neo)
+		empresaMensajeria.contratar(roberto)
+		empresaMensajeria.contratar(chucknorris)
+		assert.equals(3, empresaMensajeria.cantMensajeros())
+	}
+	test "la empresa ah contratado a 6"{
+		empresaMensajeria.contratar(neo)
+		empresaMensajeria.contratar(roberto)
+		empresaMensajeria.contratar(chucknorris)
+		empresaMensajeria.contratarATodos([neo, roberto, chucknorris])
+		assert.equals(6, empresaMensajeria.cantMensajeros())
+	}
+	test "la empresa ah contratado a 3, pero macri llego despues"{
+		empresaMensajeria.contratarATodos([neo, roberto, chucknorris])
+		empresaMensajeria.despedirA(neo)
+		assert.equals(2, empresaMensajeria.cantMensajeros())
+		empresaMensajeria.despedirA(roberto)
+		assert.equals(1, empresaMensajeria.cantMensajeros())
+	}
+	test "la empresa ah contratado a 6, pero macri se enojo despues"{
+		empresaMensajeria.contratarATodos([neo, roberto, chucknorris])
+		empresaMensajeria.contratarATodos([neo, roberto, chucknorris])
+		empresaMensajeria.despedirA(neo)
+		assert.equals(5, empresaMensajeria.cantMensajeros())
+		empresaMensajeria.despedirA(roberto)
+		assert.equals(4, empresaMensajeria.cantMensajeros())
+	}
+	test "la empresa ah contratado a 9, pero macri fundio la economia"{
+		empresaMensajeria.contratarATodos([neo, roberto, chucknorris])
+		empresaMensajeria.contratarATodos([neo, roberto, chucknorris])
+		empresaMensajeria.contratarATodos([neo, roberto, chucknorris])
+		empresaMensajeria.despedirATodos()
+		assert.equals(0, empresaMensajeria.cantMensajeros())
+	}
+	test "la empresa ah contratado a 2, pero NO ES grande"{
+		empresaMensajeria.contratarATodos([neo, roberto])
+		assert.equals(false, empresaMensajeria.esGrande())
+	}
+	test "la empresa ah contratado a 4, ES grande"{
+		empresaMensajeria.contratarATodos([neo, roberto])
+		empresaMensajeria.contratarATodos([neo, roberto])
+		assert.equals(true, empresaMensajeria.esGrande())
+	}
+	test "neo esta primero, NO TIENE CREDITO, NO PUEDE entregarlo a la matrix"{
+		neo.recarga(0)
+		paquete.enviarDestino(laMatrix)
+		paquete.pagarPaquete()
+		empresaMensajeria.contratarATodos([neo, roberto, chucknorris])
+		assert.notThat(empresaMensajeria.elPrimeroPuedeEntregar())
+	}
+	test "neo esta primero, TIENE CREDITO, PUEDE entregarlo a la matrix"{
+		neo.recarga(100)
+		paquete.enviarDestino(laMatrix)
+		paquete.pagarPaquete()
+		empresaMensajeria.contratarATodos([neo, roberto, chucknorris])
+		assert.that(empresaMensajeria.elPrimeroPuedeEntregar())
+	}
+	test "roberto esta primero, NO TIENE CREDITO, NO PUEDE entregarlo a la matrix"{
+		roberto.viaje(camion)
+		camion.nuevoacoplado(1)
+		paquete.enviarDestino(laMatrix)
+		paquete.pagarPaquete()
+		empresaMensajeria.contratarATodos([roberto, neo, chucknorris])
+		assert.notThat(empresaMensajeria.elPrimeroPuedeEntregar())
+		
+		roberto.viaje(bici)
+		assert.notThat(empresaMensajeria.elPrimeroPuedeEntregar())
+	}
+	test "roberto(camion) esta ultimo, PUEDE pasar el puente por que pesa 590"{
+		roberto.viaje(camion)
+		camion.nuevoacoplado(1)
+		paquete.enviarDestino(pBrooklyn)
+		paquete.pagarPaquete()
+		empresaMensajeria.contratarATodos([neo, chucknorris, roberto])
+		assert.equals(590, empresaMensajeria.pesoDelUltimo())
+	}
+	test "roberto(bici) esta ultimo, PUEDE pasar el puente por que pesa 90"{
+		roberto.viaje(bici)
+		paquete.enviarDestino(pBrooklyn)
+		paquete.pagarPaquete()
+		empresaMensajeria.contratarATodos([neo, chucknorris, roberto])
+		assert.equals(90, empresaMensajeria.pesoDelUltimo())
+	}
+	test "chucknorris pesa 900"{
+		paquete.enviarDestino(pBrooklyn)
+		paquete.pagarPaquete()
+		empresaMensajeria.contratarATodos([neo, roberto, chucknorris])
+		assert.equals(900, empresaMensajeria.pesoDelUltimo())
+	}
+	test "neo pesa 0"{
+		empresaMensajeria.contratarATodos([roberto, chucknorris, neo])
+		assert.equals(0, empresaMensajeria.pesoDelUltimo())
+	}
+	test "contrato a 3, solo hay uno(chucknorris) que pueda enviarlo a la matrix(con valores default)"{
+		paquete.enviarDestino(laMatrix)
+		paquete.pagarPaquete()
+		empresaMensajeria.contratarATodos([roberto, chucknorris, neo])
+		assert.equals(true, empresaMensajeria.algunoPuedeEntregar(paquete))
+	}
+	test "contrato a 4, sin chucknorris no hay quien pueda enviarlo a la matrix(con valores default)"{
+		paquete.enviarDestino(laMatrix)
+		paquete.pagarPaquete()
+		empresaMensajeria.contratarATodos([roberto, neo, roberto, neo])
+		assert.equals(false, empresaMensajeria.algunoPuedeEntregar(paquete))
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

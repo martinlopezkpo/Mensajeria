@@ -1,21 +1,10 @@
-object paqueteMisterioso {
-	var pagado = false
-	method pagar()
-	{ pagado = true }
-	
-	method puedellegar(mensajero, destino)
-	{ return destino.dejapasar(mensajero) && pagado }
-}
-
 //Puente de Brooklyn: deja pasar a todo lo que pese hasta una tonelada.
 object pBrooklyn {
-	 method dejaPasar(mensajero)
-	 { return mensajero.peso() <= 1000 }
+	method dejaPasar(mensajero){ return mensajero.peso() <= 1000 }
 }
 //La Matrix: deja entrar a quien pueda hacer una llamada.
 object laMatrix {
-	method dejaPasar(mensajero)
-	{ return mensajero.llamada() }
+	method dejaPasar(mensajero){ return mensajero.llamada() }
 }
 
 //Roberto: Roberto viaja en su bici ó en su camión.
@@ -58,8 +47,8 @@ object neo {
 
 	method llamada()		{ return credito > 0 }
 }
-/*	2:
-	Empresa de mensajería, Ahora aparece una empresa de mensajería, Fedax.
+/*	2: Empresa de mensajería
+	Ahora aparece una empresa de mensajería, Fedax.
 	Esta tiene un conjunto de mensajeros, los cuales podrían ser:
 	Roberto, Chuck y Neo.
 	
@@ -98,17 +87,16 @@ object neo {
 object paquete{
 	var estaPago = false
 	var destino = pBrooklyn
-	const precioBase = 50	//parte4
 	
 	method pagarPaquete() 		{estaPago = true}
 	method estaPago() 			{return estaPago}
 	method enviarDestino(lugar) {destino = lugar}
 
-	//fragmento necesario para la parte 3(al menos 1 puede entregarlo?)
+	//fragmento necesario para la parte 3
 	method puedeSerEntregadoPor(mensajero) {
 		return destino.dejaPasar(mensajero) and self.estaPago()
 	}
-	method precio() = precioBase
+	method precio() = 50
 }
 
 object empresaMensajeria {
@@ -149,18 +137,9 @@ object empresaMensajeria {
 		return mensajeros.last().peso()
 	}
 
-	//solo para testear
-	method mensajeros(){
-		return mensajeros
-	}
-	//solo para testear
-	method entregados() {
-		return entregados
-	}
-
 	//3.1)al menos 1 puede entregarlo?
 	method algunoPuedeEntregar(paquete) {
-		return mensajeros.any({mensajero=>paquete.puedeSerEntregadoPor(mensajero)})
+		return mensajeros.any({mensajero => paquete.puedeSerEntregadoPor(mensajero)})
 	}
 	//3.2)es un paquete facil?(todos pueden entregarlo)
 	method paqueteFacil(paquete) {
@@ -196,7 +175,7 @@ object empresaMensajeria {
 	}
 	/*A su vez, hay nuevos requerimientos para la mensajeria:
 	Hacer que se envien todos los paquetes recibidos que se puedan enviar,
-	registrándolos adecuadamente.*/
+	registrándolos adecuadamente(listas de entregados y pendientes)*/
 	method enviarTodos() {
 		self.paquetesAEnviar().forEach{paquete => self.enviar(paquete)}
 	}
