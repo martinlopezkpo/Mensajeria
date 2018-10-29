@@ -102,12 +102,14 @@ object paquete{
 object empresaMensajeria {
 	var mensajeros = []
 	var entregados = []
-	var pendientes = [paquete,paquetin,paqueton]
+	var pendientes = [paquete, paquetin, paqueton]
 	
 	method cantMensajeros() =	mensajeros.size()
 	method cantPaqEntr() =		entregados.size()
 	method cantPaqPend() =		pendientes.size()
-	
+	method mensajeros()  = mensajeros
+	method entregados()  = entregados
+	method pendientes()  = pendientes
 	//2.1)contratar a uno(el parametro es un elemento nuevo para la lista)
 	method contratar(empleado){
 		mensajeros.add(empleado)
@@ -183,7 +185,7 @@ object empresaMensajeria {
 		return pendientes.filter{paquete => self.algunoPuedeEntregar(paquete)}
 	}
 	/*Encontrar el paquete más caro.
-	(el paquete original tiene un precio determinado en $50)*/
+	(el paquete comun tiene un precio base de $50)*/
 	method paqueteMasCaro(){
 		return pendientes.max{paquete => paquete.precio()}
 	}
@@ -199,8 +201,6 @@ object paquetin {
 object paqueton {
 	//Debe poder pasar por muchos destinos(una lista de ellos).
 	var destinos = []
-	//Su precio es 100$ por cada destino.
-	var precioBase = 100
 	var importePagado = 0
 	//Se puede ir pagando parcialmente y se debe pagar totalmente para poder ser enviado.
 	method quitarDestino(dest)	 {destinos.remove(dest)}
@@ -208,9 +208,9 @@ object paqueton {
 	method agregarDestino(dest)	 {destinos.add(dest)}
 	method agregarDestinos(dests){destinos.addAll(dests)}
 	
-	method pagoParcial()		 {importePagado += 100}
-	
-	method precio() {return destinos.size()*precioBase}
+	//Su precio base es 100$ por cada destino.
+	method pagoParcial()		 {importePagado += 100}	
+	method precio() {return destinos.size()*100}
 	
 	method estaPago()			 {return importePagado >= self.precio()}
 

@@ -235,13 +235,40 @@ describe "tests de la empresa de mensajeria y los mensajeros"
 		empresaMensajeria.contratarATodos([roberto, neo, chucknorris])
 		assert.equals(2, empresaMensajeria.candidatosPara(paquete).size())
 	}
-	test "esta planta de empleados no tiene sobre peso(por defecto)"{
+	test "esta planta de empleados NO TIENE SOBREPESO(todos por defecto)"{
+		roberto.viaje(bici)
+		empresaMensajeria.contratarATodos([roberto, neo, chucknorris])
+		assert.notThat(empresaMensajeria.tieneSobrepeso())
+	}
+	test "esta planta de empleados TIENE SOBREPESO"{
 		roberto.viaje(camion)
-		camion.nuevoacoplado(1)
+		camion.nuevoacoplado(3)
+		empresaMensajeria.contratarATodos([roberto, neo, chucknorris])
+		assert.that(empresaMensajeria.tieneSobrepeso())
+	}
+	test "enviar paquete a la matrix con chucknorris"{
+		paquete.enviarDestino(laMatrix)
+		paquete.pagarPaquete()
+		empresaMensajeria.contratarATodos([chucknorris])
+		empresaMensajeria.enviar(paquete)
+		assert.that(empresaMensajeria.entregados().contains(paquete))
+		assert.notThat(empresaMensajeria.pendientes().contains(paquete))
+	}
+	test "enviar paquete al puente con chucknorris"{
 		paquete.enviarDestino(pBrooklyn)
 		paquete.pagarPaquete()
-		empresaMensajeria.contratarATodos([roberto, neo, chucknorris])
-		assert.equals(2, empresaMensajeria.candidatosPara(paquete).size())
+		empresaMensajeria.contratarATodos([chucknorris])
+		empresaMensajeria.enviar(paquete)
+		assert.that(empresaMensajeria.entregados().contains(paquete))
+		assert.notThat(empresaMensajeria.pendientes().contains(paquete))
+	}
+	test "enviar paquetin a la matrix con chucknorris"{
+		paquete.enviarDestino(pBrooklyn)
+		paquete.pagarPaquete()
+		empresaMensajeria.contratarATodos([chucknorris])
+		empresaMensajeria.enviar(paquete)
+		assert.that(empresaMensajeria.entregados().contains(paquete))
+		assert.notThat(empresaMensajeria.pendientes().contains(paquete))
 	}
 }
 
