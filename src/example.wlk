@@ -143,12 +143,12 @@ object empresaMensajeria {
 	}
 	//3.2)es un paquete facil?(todos pueden entregarlo)
 	method paqueteFacil(paquete) {
-		return mensajeros.all({mensajero=>paquete.puedeSerEntregadoPor(mensajero)})
+		return mensajeros.all({mensajero => paquete.puedeSerEntregadoPor(mensajero)})
 	}
 	//3.3)Saber que mensajeros de la empresa, son los candidatos que pueden
 	//	  llevar un paquete
 	method candidatosPara(paquete) {
-		return mensajeros.filter({mensajero=>paquete.puedeSerEntregadoPor(mensajero)})
+		return mensajeros.filter({mensajero => paquete.puedeSerEntregadoPor(mensajero)})
 	}
 	//3.4)Saber si una mensajería tiene sobrepeso.
 	//	  Esto sucede si el promedio del peso de los mensajeros
@@ -210,9 +210,9 @@ object paqueton {
 	
 	method pagoParcial()		 {importePagado += 100}
 	
-	method precioTotalPaqueton() {return destinos.size()*precioBase}
+	method precio() {return destinos.size()*precioBase}
 	
-	method estaPago()			 {return importePagado >= self.precioTotalPaqueton()}
+	method estaPago()			 {return importePagado >= self.precio()}
 
 	//el paqueton puede ser entregado, si pasa por todos los destinos de la lista, y si esta
 	//totalmente pagado.
@@ -222,32 +222,3 @@ object paqueton {
 	method puedePasarPorDestinos(mensajero)
 	{return destinos.all{ destino => destino.dejarPasar(mensajero) }}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -194,6 +194,55 @@ describe "tests de la empresa de mensajeria y los mensajeros"
 		empresaMensajeria.contratar(roberto)
 		assert.equals(false, empresaMensajeria.algunoPuedeEntregar(paquete))
 	}
+	test "este paquete ES FACIL con roberto en bici y neo/chucknorris por defecto"{
+		roberto.viaje(bici)
+		paquete.enviarDestino(pBrooklyn)
+		paquete.pagarPaquete()
+		empresaMensajeria.contratarATodos([roberto, neo, chucknorris])
+		assert.that(empresaMensajeria.paqueteFacil(paquete))
+	}
+	test "este paquete ES FACIL tambien con roberto en camion y neo/chucknorris por defecto"{
+		roberto.viaje(camion)
+		camion.nuevoacoplado(1)
+		paquete.enviarDestino(pBrooklyn)
+		paquete.pagarPaquete()
+		empresaMensajeria.contratarATodos([roberto, neo, chucknorris])
+		assert.that(empresaMensajeria.paqueteFacil(paquete))
+	}
+	test "este paquete NO ES FACIL"{
+		paquete.enviarDestino(laMatrix)
+		paquete.pagarPaquete()
+		empresaMensajeria.contratarATodos([roberto, neo, chucknorris])
+		assert.notThat(empresaMensajeria.paqueteFacil(paquete))
+	}
+	test "este paquete tiene 3 candidatos"{
+		roberto.viaje(bici)
+		paquete.enviarDestino(pBrooklyn)
+		paquete.pagarPaquete()
+		empresaMensajeria.contratarATodos([roberto, neo, chucknorris])
+		assert.equals(3, empresaMensajeria.candidatosPara(paquete).size())
+	}
+	test "este paquete tiene 1 candidato, chucknorris, porque roberto no puede y neo no tiene credito"{
+		paquete.enviarDestino(laMatrix)
+		paquete.pagarPaquete()
+		empresaMensajeria.contratarATodos([roberto, neo, chucknorris])
+		assert.equals(1, empresaMensajeria.candidatosPara(paquete).size())
+	}
+	test "este paquete tiene 2 candidato, chucknorris y neo(tiene credito) y roberto no puede"{
+		neo.recarga(100)
+		paquete.enviarDestino(laMatrix)
+		paquete.pagarPaquete()
+		empresaMensajeria.contratarATodos([roberto, neo, chucknorris])
+		assert.equals(2, empresaMensajeria.candidatosPara(paquete).size())
+	}
+	test "esta planta de empleados no tiene sobre peso(por defecto)"{
+		roberto.viaje(camion)
+		camion.nuevoacoplado(1)
+		paquete.enviarDestino(pBrooklyn)
+		paquete.pagarPaquete()
+		empresaMensajeria.contratarATodos([roberto, neo, chucknorris])
+		assert.equals(2, empresaMensajeria.candidatosPara(paquete).size())
+	}
 }
 
 
