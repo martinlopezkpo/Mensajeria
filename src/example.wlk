@@ -175,7 +175,8 @@ object empresaMensajeria {
 		entregados.add(paquete)
 		pendientes.remove(paquete)
 	}
-	/*A su vez, hay nuevos requerimientos para la mensajeria:
+	/*parte 4
+	A su vez, hay nuevos requerimientos para la mensajeria:
 	Hacer que se envien todos los paquetes recibidos que se puedan enviar,
 	registrándolos adecuadamente(listas de entregados y pendientes)*/
 	method enviarTodos() {
@@ -184,12 +185,13 @@ object empresaMensajeria {
 	method paquetesAEnviar(){
 		return pendientes.filter{paquete => self.algunoPuedeEntregar(paquete)}
 	}
-	/*Encontrar el paquete más caro.
+	/*Encontrar el paquete más caro.(retornara un paquete, no importa cual)
 	(el paquete comun tiene un precio base de $50)*/
 	method paqueteMasCaro(){
 		return pendientes.max{paquete => paquete.precio()}
 	}
 }
+//parte 4
 //Paquetito
 object paquetin {
 	//Cualquier mensajero lo puede llevar.
@@ -220,5 +222,5 @@ object paqueton {
 	{return self.puedePasarPorDestinos(mensajero) && self.estaPago()}
 	
 	method puedePasarPorDestinos(mensajero)
-	{return destinos.all{ destino => destino.dejarPasar(mensajero) }}
+	{return destinos.all{ destino => destino.dejaPasar(mensajero) }}
 }

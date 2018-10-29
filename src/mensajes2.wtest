@@ -1,0 +1,89 @@
+import example2.*
+
+describe "conjunto de tests de los mensajeros" { 
+	var paquete  = new Paquete(destino=matrix)
+	var camion   = new Camion(acoplados=2)
+	var roberto  = new Transportista(peso=90,transporte= camion)
+	var paquetin = new Paquetin()
+	var paqueton = new Paqueton(destinos = [brooklyn,matrix])
+
+	fixture{
+		paquete.pagar()
+		paqueton.pagar()
+		mensajeria.pendientes([paquete,paquetin,paqueton])
+    }
+    
+    method agregarMuchosMensajeros(){
+    	mensajeria.contratar(neo)
+    	mensajeria.contratar(chuck)
+    	mensajeria.contratar(roberto)
+	}
+	
+	test "La mensajeria tiene a neo como empleado si lo agregarmos" {
+		paquete.destino(brooklyn)
+		self.agregarMuchosMensajeros()
+		assert.that(mensajeria.mensajeros().contains(neo))
+	}
+	
+	test "Si neo es empleado, Hay un mensajero que puede enviar el paquete" {
+		mensajeria.contratar(neo)
+		assert.that(mensajeria.algunoPuedeEntregar(paquete))
+	}
+	
+	test "El paquete fue enviado" {
+		self.agregarMuchosMensajeros()
+		mensajeria.enviar(paquete)
+		assert.that(mensajeria.entregados().contains(paquete))
+	}
+	test "Si no hay mensajeros, el paquete no se envia" {
+		
+		assert.throwsException({mensajeria.enviar(paquete)})
+		assert.notThat(mensajeria.entregados().contains(paquete))
+	}
+	
+	test "roberto con camion y 2 acoplado no pasa por el puente"{
+		assert.notThat(brooklyn.dejarPasar(roberto))
+	}
+	test "roberto con camion y 1 acoplado pasa por el puente"{
+		camion.acoplados(1)
+		assert.that(brooklyn.dejarPasar(roberto))
+	}
+	// requerimientos parte 4
+	test "el paquetin puede ser entregado por cualquier mensajero"{
+		assert.that(paquetin.puedeSerEntregadoPor("cualquiera"))
+	}
+	test "el paqueton no puede ser entregado si sólo se pagó una parte"{
+		assert.notThat(paqueton.puedeSerEntregadoPor(chuck))
+	}
+	test "el paqueton puede ser entregado si se pago completo, con un mensajero que puede ir a todos los destinos"{
+		paqueton.pagar()
+		assert.that(paqueton.puedeSerEntregadoPor(chuck))
+	}
+	test "el paqueton pagado no puede ser entregado con un mensajero que no puede ir a algun destino"{
+		paqueton.pagar()
+		assert.notThat(paqueton.puedeSerEntregadoPor(roberto))
+	}
+
+	test "La menjaeria con chuck envia todos los paquetes, no quedan pendientes"{
+		mensajeria.contratar(chuck)
+		paqueton.pagar()
+		mensajeria.enviarTodos()
+		assert.that(mensajeria.pendientes().isEmpty())
+	}
+	test "La menjaeria con roberto envia solo el paquetin"{
+		mensajeria.contratar(roberto)
+		paqueton.pagar()
+		mensajeria.enviarTodos()
+		assert.that(mensajeria.pendientes().contains(paquete))
+		assert.that(mensajeria.pendientes().contains(paqueton))
+		assert.that(mensajeria.entregados().contains(paquetin))
+	}
+	test "El paquete mas caro es el paqueton" {
+		assert.equals(paqueton, mensajeria.paqueteMasCaro())
+	}
+	test "Si en la mensajeria no está el paqueton, el mas caro es el paquete" {
+		mensajeria.pendientes().remove(paqueton)
+		assert.equals(paquete, mensajeria.paqueteMasCaro())
+	}
+	
+}

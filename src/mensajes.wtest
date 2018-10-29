@@ -270,6 +270,32 @@ describe "tests de la empresa de mensajeria y los mensajeros"
 		assert.that(empresaMensajeria.entregados().contains(paquete))
 		assert.notThat(empresaMensajeria.pendientes().contains(paquete))
 	}
+	test "enviar todos los paquetes pendientes por defecto a la matrix, con chucknorris"{
+		paquete.enviarDestino(laMatrix)
+		paquete.pagarPaquete()
+		//para el paquetin no hace falta inicializar nada.
+		paqueton.agregarDestinos([laMatrix, laMatrix, pBrooklyn, pBrooklyn])
+		paqueton.pagoParcial()
+		paqueton.pagoParcial()
+		paqueton.pagoParcial()
+		paqueton.pagoParcial()//4 destinos, 4 pagos.
+		empresaMensajeria.contratarATodos([chucknorris])
+		empresaMensajeria.enviarTodos()
+		assert.equals(3, empresaMensajeria.entregados().size())
+		assert.equals(0, empresaMensajeria.pendientes().size())
+	}
+	test "el paquete mas caro(paqueton de 4 destinos) de la mensajeria sale 400$"{
+		paquete.enviarDestino(laMatrix)
+		paquete.pagarPaquete()
+		//para el paquetin no hace falta inicializar nada.
+		paqueton.agregarDestinos([laMatrix, laMatrix, pBrooklyn, pBrooklyn])
+		empresaMensajeria.contratarATodos([chucknorris])
+		assert.equals(400, empresaMensajeria.paqueteMasCaro().precio())
+	}
+	test "el paquete mas caro(paquete comun, por defecto) de la mensajeria sale 50$"{
+		empresaMensajeria.contratarATodos([chucknorris])
+		assert.equals(50, empresaMensajeria.paqueteMasCaro().precio())
+	}
 }
 
 
