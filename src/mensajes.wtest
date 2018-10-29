@@ -166,10 +166,32 @@ describe "tests de la empresa de mensajeria y los mensajeros"
 		empresaMensajeria.contratarATodos([roberto, chucknorris, neo])
 		assert.equals(true, empresaMensajeria.algunoPuedeEntregar(paquete))
 	}
-	test "contrato a 4, sin chucknorris no hay quien pueda enviarlo a la matrix(con valores default)"{
+	test "contrato a 4, sin chucknorris, no hay quien pueda enviarlo a la matrix(con valores default)"{
 		paquete.enviarDestino(laMatrix)
 		paquete.pagarPaquete()
 		empresaMensajeria.contratarATodos([roberto, neo, roberto, neo])
+		assert.equals(false, empresaMensajeria.algunoPuedeEntregar(paquete))
+	}
+	test "contrato a neo nomas y le acredito para que pueda enviarlo a la matrix"{
+		neo.recarga(100)
+		paquete.enviarDestino(laMatrix)
+		paquete.pagarPaquete()
+		empresaMensajeria.contratarATodos([neo])
+		assert.equals(true, empresaMensajeria.algunoPuedeEntregar(paquete))
+	}
+	test "roberto ya de por si no puede pisar la matrix en camion"{
+		roberto.viaje(camion)
+		camion.nuevoacoplado(1)
+		paquete.enviarDestino(laMatrix)
+		paquete.pagarPaquete()
+		empresaMensajeria.contratar(roberto)
+		assert.equals(false, empresaMensajeria.algunoPuedeEntregar(paquete))
+	}
+	test "roberto ya de por si no puede pisar la matrix en bici"{
+		roberto.viaje(bici)
+		paquete.enviarDestino(laMatrix)
+		paquete.pagarPaquete()
+		empresaMensajeria.contratar(roberto)
 		assert.equals(false, empresaMensajeria.algunoPuedeEntregar(paquete))
 	}
 }
