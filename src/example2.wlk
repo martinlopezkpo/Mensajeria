@@ -19,7 +19,7 @@ Al mismo tiempo, puedo tener a otro empleado que tiene un camión con dos acopla
 */
 class Transportista {
 	var peso = 90
-	var property transporte = new Camion(acoplados=1)
+	var property transporte = new Camion(acoplados = 1)
 
 	method peso() {
 		return peso + transporte.peso()
@@ -27,11 +27,6 @@ class Transportista {
 
 	method tieneCredito() = false
 }
-
-object chuck {
-	const property peso = 900
-	method tieneCredito() = true 
-} 
 
 class Camion {
 	var property acoplados = 2
@@ -41,6 +36,10 @@ class Camion {
 object bicicleta {
 	method peso() = 0
 }
+object chuck {
+	const property peso = 900
+	method tieneCredito() = true 
+} 
 
 object neo {
 	var credito = 7
